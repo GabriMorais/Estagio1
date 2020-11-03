@@ -4,6 +4,7 @@ export default class BootScene extends Phaser.Scene {
         super("PlayGame");
         this.enemies;
         this.player;
+        this.life = 300
         this.cursors;
         this.golpeesq;
         this.x = 0;
@@ -11,6 +12,8 @@ export default class BootScene extends Phaser.Scene {
         this.keyS;
         this.depgolpeesq = 1;
         this.enemiesGroup;
+        this.invincible = false
+        this.titulo;
       }
 preload(){
 
@@ -24,6 +27,10 @@ create() {
     const depoiscol = map.createStaticLayer("depoiscol", tileset, 0, 0,);
     colisao.setCollisionByProperty({ coliders: true });
     depoiscol.setCollisionByProperty({ coliders: true });
+    this.titulo = this.add.text(250,60, this.life, {
+        fontSize: "45px",
+        fill: "#FFD700",
+    });
 
     //player
 
@@ -34,14 +41,22 @@ create() {
     );
 
     this.player = this.physics.add.sprite(spawnPoint.x, spawnPoint.y, "player");
-    this.player.setScale(1.5)
+    this.player.setScale(1.2)
+    this.physics.add.collider(this.player, colisao);
+    this.physics.add.collider(this.player, depoiscol);
    //first enemy name of the object
   //secound enemy the name now to object
   this.enemies = map.createFromObjects("enemy", "enemy", {});
-  this.enemiesGroup = new Enemies(this.physics.world, this, [], this.enemies);
-    
-    this.physics.add.collider(this.player, colisao);
-    this.physics.add.collider(this.player, depoiscol);
+  this.enemiesGroup = new Enemies(this.physics.world, this, [], this.enemies,this.player);
+    this.physics.add.collider( this.player,this.enemiesGroup);
+    this.physics.add.collider(
+        this.enemiesGroup,
+        this.player,
+        //funcao para matar o inimigo
+        this.hitEnemy,
+        null,
+        this
+      );
     this.physics.add.collider(this.enemiesGroup, colisao);
     this.physics.add.collider(this.enemiesGroup, depoiscol);
     const anims = this.anims;
@@ -117,7 +132,18 @@ create() {
         frameRate:10, 
         repeat: -1,
     });
-    
+    anims.create({
+        key: "golpe",
+        frames: anims.generateFrameNames("ataque", { start: 0, end:1}),
+        frameRate:10, 
+        repeat: -1,
+    });
+    anims.create({
+        key: "golpe1",
+        frames: anims.generateFrameNames("ataque", { start: 2, end:3}),
+        frameRate:10, 
+        repeat: -1,
+    });
     anims.create({
         key: "parado",
         frames: [ { key: 'player', frame: 0 } ],
@@ -132,6 +158,7 @@ create() {
     camera.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
 
     this.cursors = this.input.keyboard.createCursorKeys();
+    
 }
 update() {
     //put here  before your velocity is 0
@@ -202,4 +229,27 @@ update() {
     
     
 }   
+hitEnemy() {
+    if (!this.invincible) {
+      this.invincible = true;
+      this.events.emit("hitEnemy", --this.life);
+      this.titulo.destroy();
+      this.titulo = this.add.text(250,60, this.life, {
+        fontSize: "45px",
+        fill: "#FFD700",
+    });
+
+      this.time.delayedCall(
+        2000,
+        () => {
+          this.invincible = false;
+        },
+        null,
+        this
+      );
+    }
+    if(this.life <= 0){
+        this.scene.stop("PlayGame")
+    }
+  }
 }

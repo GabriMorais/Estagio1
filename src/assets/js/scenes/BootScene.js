@@ -31,10 +31,14 @@ export default class BootScene extends Phaser.Scene {
       frameWidth: 51.05,
       frameHeight: 64,
   });
-  this.load.spritesheet("enemy","src/assets/img/enemy1.png", {
+  this.load.spritesheet("enemy","src/assets/img/enemy3.png", {
       frameWidth: 51.05,
       frameHeight: 64,
   });
+  this.load.spritesheet("ataque","src/assets/img/ataque4.png", {
+    frameWidth: 91,
+    frameHeight: 62,
+});
   }
 
   create()
