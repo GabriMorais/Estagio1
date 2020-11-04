@@ -98,15 +98,25 @@ create() {
     });
     anims.create({
         key: "keyS",
-        frames: anims.generateFrameNames("player", { start: 31, end:34}),
-        frameRate:17, 
+        frames: anims.generateFrameNames("player", { start: 32, end:34}),
+        frameRate:13, 
         repeat: -1,
     });
     anims.create({
-        key: "pulo",
-        frames: anims.generateFrameNames("player", { start: 34, end:38}),
-        frameRate:17, 
+        key: "keys1",
+        frames: anims.generateFrameNames("player", { start: 35, end:37}),
+        frameRate:13, 
         repeat: -1,
+    });
+    anims.create({
+        key: "keyd",
+        frames: [ { key: 'player', frame: 39 } ],
+        frameRate:1, 
+    });
+    anims.create({
+        key: "keyd1",
+        frames: [ { key: 'player', frame: 42 } ],
+        frameRate:1, 
     });
     anims.create({
         key: "a",
@@ -145,6 +155,12 @@ create() {
         repeat: -1,
     });
     anims.create({
+        key: "damage",
+        frames: anims.generateFrameNames("player", { start: 44, end:45}),
+        frameRate:50, 
+        repeat: -1,
+    });
+    anims.create({
         key: "parado",
         frames: [ { key: 'player', frame: 0 } ],
         frameRate:1, 
@@ -168,6 +184,7 @@ update() {
     
     this.keyA = this.input.keyboard.addKey(65);
     this.keyS = this.input.keyboard.addKey(83);
+    this.keyD = this.input.keyboard.addKey(68);
     //keyboard press to move
     if (this.cursors.left.isDown) {
         this.player.body.setVelocityX(-100);
@@ -203,14 +220,21 @@ update() {
        
     }else if (this.keyS.isDown && this.depgolpeesq == 1 && this.x ==1 ) {
         
-        this.player.anims.play("keyS", true); 
+        this.player.anims.play("keys1", true); 
     }else if (this.keyS.isDown && this.depgolpeesq == 1 && this.x==0) {
          
         this.player.anims.play("keyS", true); 
+        
          
              
           
         
+    }else if (this.keyD.isDown && this.depgolpeesq == 1 && this.x ==1 ) {
+        
+        this.player.anims.play("keyd1", true); 
+    }else if (this.keyD.isDown && this.depgolpeesq == 1 && this.x==0) {
+         
+        this.player.anims.play("keyd", true);
     }
     else if (this.cursors.space.isDown) {
         this.player.setVelocityY(-30);
@@ -230,24 +254,36 @@ update() {
     
 }   
 hitEnemy() {
-    if (!this.invincible) {
-      this.invincible = true;
-      this.events.emit("hitEnemy", --this.life);
-      this.titulo.destroy();
-      this.titulo = this.add.text(250,60, this.life, {
-        fontSize: "45px",
-        fill: "#FFD700",
-    });
-
-      this.time.delayedCall(
-        2000,
-        () => {
-          this.invincible = false;
-        },
-        null,
-        this
-      );
+    if (this.keyD.isDown) {
+        this.player.anims.play("keyd", true);
+    } else {
+            if (Math.random(100) < 30) {
+                if (!this.invincible) {
+                    this.player.anims.play("damage")
+                    this.invincible = true;
+                    this.events.emit("hitEnemy", --this.life);
+                    this.events.removeListener( "hitEnemy",--this.life)
+                    this.titulo.destroy();
+                    this.titulo = this.add.text(250,60, this.life, {
+                    fontSize: "45px",
+                    fill: "#FFD700",
+                    });
+                    this.time.delayedCall(
+                        8000,
+                        () => {
+                          this.invincible = false;
+                         
+                        },
+                        null,
+                        this
+                      );
+            }
+            
+           
+          }
+        
     }
+    
     if(this.life <= 0){
         this.scene.stop("PlayGame")
     }

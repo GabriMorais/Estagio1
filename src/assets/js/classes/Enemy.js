@@ -33,13 +33,13 @@ class Enemy extends Phaser.Physics.Arcade.Sprite{
             this.x,
             this.y,
             this.player.x,
-            this.player.y) < 100 && this.x<this.player.x) {
+            this.player.y) < 100 && this.x<this.player.x ) {
             this.anims.play("golpe",true)
         }else if(Phaser.Math.Distance.Between (
             this.x,
             this.y,
             this.player.x,
-            this.player.y) < 80 && this.x > this.player.x){
+            this.player.y) < 100 && this.x > this.player.x ){
                 this.anims.play("golpe1",true)
         } 
         else {

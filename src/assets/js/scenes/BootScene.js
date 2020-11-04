@@ -27,7 +27,7 @@ export default class BootScene extends Phaser.Scene {
   }
 
   loadSpriteSheets() {
-    this.load.spritesheet("player","src/assets/img/teste28.png",{
+    this.load.spritesheet("player","src/assets/img/teste30.png",{
       frameWidth: 51.05,
       frameHeight: 64,
   });
