@@ -12,13 +12,14 @@ createEnemies(scene, spriteArray,player) {
 
     spriteArray.forEach(sprite => {
       //create an enemy
-      const enemy = new Enemy(scene, sprite.x, sprite.y,player)
+      const enemy = new Enemy(scene, sprite.x, sprite.y,player,sprite)
       //add it to the group
       this.add(enemy)
       //destroy the sprite
       sprite.destroy()
     })
   }
+  
     
 }
 

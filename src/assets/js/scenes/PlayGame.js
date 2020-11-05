@@ -1,5 +1,7 @@
+import FileLoader from "file-loader";
+import { NONE } from "phaser";
 import Enemies from "../classes/Enemies";
-export default class BootScene extends Phaser.Scene {
+export default class PlayGame extends Phaser.Scene {
     constructor() {
         super("PlayGame");
         this.enemies;
@@ -48,13 +50,16 @@ create() {
   //secound enemy the name now to object
   this.enemies = map.createFromObjects("enemy", "enemy", {});
   this.enemiesGroup = new Enemies(this.physics.world, this, [], this.enemies,this.player);
-    this.physics.add.collider( this.player,this.enemiesGroup);
+
     this.physics.add.collider(
-        this.enemiesGroup,
         this.player,
-        //funcao para matar o inimigo
+        this.enemiesGroup,
+        //funcao para matar o player
         this.hitEnemy,
         null,
+        
+        
+        
         this
       );
     this.physics.add.collider(this.enemiesGroup, colisao);
@@ -250,26 +255,26 @@ update() {
     if(this.keyA.isUp){
         this.depgolpeesq = 1
     }
-    
-    
 }   
 hitEnemy() {
+    this.physics.collide( this.player,
+        this.enemiesGroup,null)
     if (this.keyD.isDown) {
         this.player.anims.play("keyd", true);
     } else {
-            if (Math.random(100) < 30) {
+            if (Math.random(100) < 100) {
                 if (!this.invincible) {
                     this.player.anims.play("damage")
                     this.invincible = true;
                     this.events.emit("hitEnemy", --this.life);
-                    this.events.removeListener( "hitEnemy",--this.life)
+                  
                     this.titulo.destroy();
                     this.titulo = this.add.text(250,60, this.life, {
                     fontSize: "45px",
                     fill: "#FFD700",
                     });
                     this.time.delayedCall(
-                        8000,
+                        2000,
                         () => {
                           this.invincible = false;
                          

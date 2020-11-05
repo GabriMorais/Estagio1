@@ -1,13 +1,17 @@
+import PlayGame from "../scenes/PlayGame";
 class Enemy extends Phaser.Physics.Arcade.Sprite{
 
 
-    constructor(scene,x ,y,player){
+    constructor(scene,x ,y,player,sprite){
 
         //pegar nosso monstrinho chamado slime para aplicar no game
         super(scene,x,y,'enemy', 0)
+        this.sprite = sprite
         this.scene = scene
         this.walking = 0;
         this.attack = 1;
+        this.titulo;
+        this.invencible = false;
         this.state = this.walking;
         this.setScale(1.2)
         this.enemyLife = 3;
@@ -25,8 +29,18 @@ class Enemy extends Phaser.Physics.Arcade.Sprite{
             loop: true,
             callbackScope: this
         })
+        
     }
-
+    create(){
+        this.scene.physics.add.collider(
+            this.player,
+            this.sprite,
+            //funcao para matar o inimigo
+            this.hitEnemy,
+            null
+          );
+    }
+    
     move(){
         
         if (Phaser.Math.Distance.Between (
@@ -35,34 +49,43 @@ class Enemy extends Phaser.Physics.Arcade.Sprite{
             this.player.x,
             this.player.y) < 100 && this.x<this.player.x ) {
             this.anims.play("golpe",true)
+            this.hitEnemy;
+            this.scene.time.addEvent({
+                delay:1300,
+                callback: () => {
+                    this.anims.stop()
+                    this.setVelocity(0)
+                },
+                callbackScope: this,
+            })
         }else if(Phaser.Math.Distance.Between (
             this.x,
             this.y,
             this.player.x,
             this.player.y) < 100 && this.x > this.player.x ){
                 this.anims.play("golpe1",true)
+                this.scene.time.addEvent({
+                    delay:1300,
+                    callback: () => {
+                        this.anims.stop()
+                        this.setVelocity(0)
+                    },
+                    callbackScope: this,
+                })
         } 
         else {
             if (this.state == this.walking) {
                 if (this.x < this.player.x) {
-                    this.setVelocityX(50)
-                    this.anims.play("b",true)            
-                } else {
-                    this.setVelocityX(-50)
-                    this.anims.play("a",true)
+                    this.setVelocityX(30)
+                    this.anims.play("a",true)            
+                } else if(this.x > this.player.x) {
+                    this.setVelocityX(-30)
+                    this.anims.play("b",true)
                 }    
             }    
         }
         
-        this.scene.time.addEvent({
-            delay:1300,
-            callback: () => {
-                this.anims.stop()
-                this.setVelocity(0)
-            },
-            callbackScope: this,
-        })
-        
+       
         
         const randNumber = Math.floor(Math.random() * 4 + 1)
         switch(randNumber){
@@ -70,77 +93,50 @@ class Enemy extends Phaser.Physics.Arcade.Sprite{
                 
                 break
             case 2: 
-                
+            
                 break
             case 3: 
-                this.setVelocityY(50)
+                this.setVelocityY(30)
                 this.anims.play("c",true)
                 
                
                 break
             case 4: 
-                this.setVelocityY(-50)
+                this.setVelocityY(-30)
                 this.anims.play("d",true)
                
                 break
             default: 
-                this.setVelocityX(50)
+                this.setVelocityX(30)
                 this.anims.stop()
         }
-
-        this.scene.time.addEvent({
-            delay:2000,
-            callback: () => {
-                this.anims.stop()
-                this.setVelocity(0)
-            },
-            callbackScope: this,
-        })
-    }
-    hitEnemy() {
-        //this.scene.events.emit("distanceEnemy", this);
-        console.log(this.x, this.y);
         let d = Phaser.Math.Distance.Between(
-          this.x,
-          this.y,
-          this.player.x,
-          this.player.y
-        );
-    
-        if (d <= 50) {
-          console.log("fight");
-          if (--this.enemyLife <= 0) {
+            this.x,
+            this.y,
+            this.player.x,
+            this.player.y
+          );
+        if (d < 50) {
+            this.enemyLife = this.enemyLife - 1;
+        } 
+        if (this.enemyLife <= 0) {
             this.setVisible(false);
             this.setActive(false);
-            this.spawnChest(this.x, this.y, this.player);
             this.body.checkCollision.none = true;
           }
-        } else {
-          console.log("you cant fight from this distance");
-          this.fightText = this.scene.make.text({
-            x: 350,
-            y: 100,
-            text: "You cant fight from this distance.",
-            origin: 0.5,
-            style: {
-              font: "bold 15px Arial",
-              fill: "Red",
-              wordWrap: { width: 300 },
-            },
-          });
+
+    }
+}
     
-          this.scene.time.addEvent({
-            delay: 20,
-            callback: () => {
-              this.fightText.destroy();
-            },
-            callbackScope: this,
-          });
-        }
-      }
+      
+        
+        
+        
+        
+    
 
   
 
-}
+
 
 export default Enemy
