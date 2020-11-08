@@ -2,14 +2,14 @@ import PlayGame from "../scenes/PlayGame";
 class Enemy extends Phaser.Physics.Arcade.Sprite{
 
 
-    constructor(scene,x ,y,player,sprite){
+    constructor(scene,x ,y,player,sprite,attack){
 
         //pegar nosso monstrinho chamado slime para aplicar no game
         super(scene,x,y,'enemy', 0)
         this.sprite = sprite
         this.scene = scene
         this.walking = 0;
-        this.attack = 1;
+        this.attack = attack;
         this.titulo;
         this.invencible = false;
         this.state = this.walking;
@@ -117,6 +117,7 @@ class Enemy extends Phaser.Physics.Arcade.Sprite{
             this.player.y
           );
         if (d < 50) {
+            this.attack.play();
             this.enemyLife = this.enemyLife - 1;
         } 
         if (this.enemyLife <= 0) {

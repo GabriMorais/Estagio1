@@ -16,11 +16,27 @@ export default class PlayGame extends Phaser.Scene {
         this.enemiesGroup;
         this.invincible = false
         this.titulo;
+        this.music;
+        this.damage;
+        this.attack;
       }
 preload(){
 
 }
 create() {
+    this.music = this.sound.add('musica');
+	this.music.loop = true;
+	this.music.volume = .5;
+    this.music.play();
+    this.damage = this.sound.add("pdamage", {
+        loop: false,
+        volume: 1,
+      });
+  
+    this.attack = this.sound.add("edamage", {
+        loop: false,
+        volume: 1,
+      });
     const map = this.make.tilemap({ key: "map" });
     const tileset = map.addTilesetImage("16", "tiles")
 
@@ -49,7 +65,7 @@ create() {
    //first enemy name of the object
   //secound enemy the name now to object
   this.enemies = map.createFromObjects("enemy", "enemy", {});
-  this.enemiesGroup = new Enemies(this.physics.world, this, [], this.enemies,this.player);
+  this.enemiesGroup = new Enemies(this.physics.world, this, [], this.enemies,this.player,this.attack);
 
     this.physics.add.collider(
         this.player,
@@ -264,10 +280,10 @@ hitEnemy() {
     } else {
             if (Math.random(100) < 100) {
                 if (!this.invincible) {
+                    this.damage.play();
                     this.player.anims.play("damage")
                     this.invincible = true;
                     this.events.emit("hitEnemy", --this.life);
-                  
                     this.titulo.destroy();
                     this.titulo = this.add.text(250,60, this.life, {
                     fontSize: "45px",

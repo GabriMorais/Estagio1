@@ -10,6 +10,12 @@ export default class BootScene extends Phaser.Scene {
     this.loadImages();
     //load spritesheets
     this.loadSpriteSheets();
+    this.loadAudio();
+  }
+  loadAudio(){
+    this.load.audio("musica", "src/assets/audio/musica.mp3")
+    this.load.audio("pdamage", "src/assets/audio/PlayerDamage.wav")
+    this.load.audio("edamage", "src/assets/audio/Punch_04.wav")
   }
 
 
@@ -67,9 +73,13 @@ export default class BootScene extends Phaser.Scene {
         let player = this.add.image(120,200,"teste").setOrigin(0,0);
         player.setScale(1.5)
 		
-        
+        this.music = this.sound.add('musica');
+	      this.music.loop = true;
+	      this.music.volume = .5;
+	      this.music.play();
 
         //Adicionar o clique do botao
         btnPlay.on("pointerdown", () => this.scene.start("PlayGame"));
+        btnPlay.on("pointerdown", () => this.music.stop() );
     }
 }
