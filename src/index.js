@@ -1,6 +1,8 @@
 import Phaser from "phaser";
 import BootScene from "./assets/js/scenes/BootScene";
 import PlayGame from "./assets/js/scenes/PlayGame";
+import vitoria from "./assets/js/scenes/vitoria";
+import derrota from "./assets/js/scenes/derrota";
 const config = {
     type: Phaser.AUTO,
     parent: "phaser-example",
@@ -18,11 +20,13 @@ const config = {
     scene: [
       BootScene,
       PlayGame,
+      vitoria,
+      derrota
     ],
     physics: {
       default: "arcade",
       arcade: {
-        debug: true,
+        debug: false,
         gravity: {
           y: 0,
         },

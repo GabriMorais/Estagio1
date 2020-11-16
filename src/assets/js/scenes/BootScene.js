@@ -13,7 +13,7 @@ export default class BootScene extends Phaser.Scene {
     this.loadAudio();
   }
   loadAudio(){
-    this.load.audio("musica", "src/assets/audio/musica.mp3")
+    this.load.audio("musica", "src/assets/audio/music.wav")
     this.load.audio("pdamage", "src/assets/audio/PlayerDamage.wav")
     this.load.audio("edamage", "src/assets/audio/Punch_04.wav")
   }
@@ -29,13 +29,18 @@ export default class BootScene extends Phaser.Scene {
   }
 
   loadTiledMap() {
-    this.load.tilemapTiledJSON("map", "src/assets/map/mapa1.json");
+    this.load.tilemapTiledJSON("map", "src/assets/map/mapa5.json");
   }
 
   loadSpriteSheets() {
     this.load.spritesheet("player","src/assets/img/teste30.png",{
       frameWidth: 51.05,
       frameHeight: 64,
+  });
+ 
+    this.load.spritesheet("enemyfinal","src/assets/img/enemyfinal1.png",{
+      frameWidth: 64.15,
+      frameHeight: 62,
   });
   this.load.spritesheet("enemy","src/assets/img/enemy3.png", {
       frameWidth: 51.05,
@@ -73,12 +78,16 @@ export default class BootScene extends Phaser.Scene {
         let player = this.add.image(120,200,"teste").setOrigin(0,0);
         player.setScale(1.5)
 		
-        this.music = this.sound.add('musica');
-	      this.music.loop = true;
-	      this.music.volume = .5;
+        this.music = this.sound.add('musica',{
+        
+          volume : .05,
+          loop : true,
+      });
+    
 	      this.music.play();
 
         //Adicionar o clique do botao
+       
         btnPlay.on("pointerdown", () => this.scene.start("PlayGame"));
         btnPlay.on("pointerdown", () => this.music.stop() );
     }

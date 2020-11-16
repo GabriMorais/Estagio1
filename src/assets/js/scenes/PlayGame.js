@@ -4,38 +4,58 @@ import Enemies from "../classes/Enemies";
 export default class PlayGame extends Phaser.Scene {
     constructor() {
         super("PlayGame");
+        this.enemyfinalLife = 1;
         this.enemies;
         this.player;
-        this.life = 300
+        this.life = 15
         this.cursors;
         this.golpeesq;
         this.x = 0;
         this.keyA;
         this.keyS;
+        this.textTela;
+        this.textTela1;
+        this.textTela2
         this.depgolpeesq = 1;
+        this.walking = 1
+        this.defesa = 2
+        this.state = this.walking;
         this.enemiesGroup;
         this.invincible = false
         this.titulo;
         this.music;
         this.damage;
         this.attack;
+        this.enemyfinal;
+        this.timeEvent;
+        
+        
       }
 preload(){
 
 }
 create() {
-    this.music = this.sound.add('musica');
-	this.music.loop = true;
-	this.music.volume = .5;
+    this.timeEvent = this.time.addEvent({
+        delay: 2500,
+        callback: this.move,
+        loop: true,
+        callbackScope: this
+    })
+    this.music = this.sound.add('musica',{
+        
+        volume : .1,
+        loop : true,
+    });
+	
     this.music.play();
     this.damage = this.sound.add("pdamage", {
         loop: false,
-        volume: 1,
+        volume: 5,
       });
   
     this.attack = this.sound.add("edamage", {
         loop: false,
-        volume: 1,
+        volume: 5,
       });
     const map = this.make.tilemap({ key: "map" });
     const tileset = map.addTilesetImage("16", "tiles")
@@ -45,11 +65,7 @@ create() {
     const depoiscol = map.createStaticLayer("depoiscol", tileset, 0, 0,);
     colisao.setCollisionByProperty({ coliders: true });
     depoiscol.setCollisionByProperty({ coliders: true });
-    this.titulo = this.add.text(250,60, this.life, {
-        fontSize: "45px",
-        fill: "#FFD700",
-    });
-
+    this.invincible =false
     //player
 
     const spawnPoint = map.findObject(
@@ -57,29 +73,44 @@ create() {
         "player",
         (objects) => objects.name === "player"
     );
+    const enemyspawnPoint = map.findObject(
+        //player and not Player like your variable
+        "enemyfinal",
+        (objects) => objects.name === "enemyfinal"
+    );
 
     this.player = this.physics.add.sprite(spawnPoint.x, spawnPoint.y, "player");
-    this.player.setScale(1.2)
+    this.player.setScale(1.5)
     this.physics.add.collider(this.player, colisao);
     this.physics.add.collider(this.player, depoiscol);
+
    //first enemy name of the object
   //secound enemy the name now to object
   this.enemies = map.createFromObjects("enemy", "enemy", {});
   this.enemiesGroup = new Enemies(this.physics.world, this, [], this.enemies,this.player,this.attack);
-
-    this.physics.add.collider(
-        this.player,
-        this.enemiesGroup,
-        //funcao para matar o player
-        this.hitEnemy,
-        null,
-        
-        
-        
-        this
-      );
+  this.physics.add.overlap(
+    this.enemiesGroup,
+    this.player,
+    //funcao para matar o player
+    this.hitEnemy,
+    null,
+    this
+  );      
     this.physics.add.collider(this.enemiesGroup, colisao);
     this.physics.add.collider(this.enemiesGroup, depoiscol);
+    this.enemyfinal = this.physics.add.sprite(spawnPoint.x + 200, spawnPoint.y  , "enemyfinal");
+    this.player.setScale(0.8)
+    this.physics.add.collider(this.enemyfinal, colisao);
+    this.physics.add.collider(this.enemyfinal, depoiscol);
+    this.physics.add.overlap(
+    this.player,
+    this.enemyfinal,
+    //funcao para matar o player
+    this.hitEnemyfinal,
+    null,
+    this
+  );      
+    
     const anims = this.anims;
     anims.create({
         key: "right",
@@ -99,6 +130,80 @@ create() {
         frameRate: 10,
         repeat: -1,
     });
+    anims.create({
+        key: "efinald",
+        frames: anims.generateFrameNames("enemyfinal", { start: 6, end: 11 }),
+        frameRate: 10,
+        repeat: -1,
+    });
+    anims.create({
+        key: "efinale",
+        frames: anims.generateFrameNames("enemyfinal", { start: 0, end: 5 }),
+        frameRate: 10,
+        repeat: -1,
+    });
+    anims.create({
+        key: "efinalb",
+        frames: anims.generateFrameNames("enemyfinal", { start: 2, end: 1 }),
+        frameRate: 10,
+        repeat: -1,
+    });
+    anims.create({
+        key: "efinals",
+        frames: anims.generateFrameNames("enemyfinal", { start: 8, end: 9 }),
+        frameRate: 10,
+        repeat: -1,
+    });
+    anims.create({
+        key: "efinalgolpe",
+        frames: anims.generateFrameNames("enemyfinal", { start: 12, end: 13 }),
+        frameRate: 10,
+        repeat: -1,
+    });
+    anims.create({
+        key: "efinalgolpe1",
+        frames: anims.generateFrameNames("enemyfinal", { start: 14, end: 15 }),
+        frameRate: 10,
+        repeat: -1,
+    });
+    anims.create({
+        key: "efinalgolpe2",
+        frames: anims.generateFrameNames("enemyfinal", { start: 20, end: 21 }),
+        frameRate: 10,
+        repeat: -1,
+    });
+    anims.create({
+        key: "efinalgolpe3",
+        frames: anims.generateFrameNames("enemyfinal", { start: 22, end: 23}),
+        frameRate: 10,
+        repeat: -1,
+    });
+    anims.create({
+        key: "efinaldefesa",
+        frames: [ { key: "enemyfinal", frame: 17 } ],
+        frameRate:1, 
+    });
+    anims.create({
+        key: "efinaldefesa1",
+        frames: [ { key: "enemyfinal", frame: 18 } ],
+        frameRate:1, 
+    });
+    anims.create({
+        key: "efinaldamage",
+        frames: [ { key: "enemyfinal", frame: 20 } ],
+        frameRate:1, 
+    });
+    anims.create({
+        key: "efinaldamage1",
+        frames: [ { key: "enemyfinal", frame: 16 } ],
+        frameRate:1, 
+    });
+    anims.create({
+        key: "morte",
+        frames: [ { key: "enemyfinal", frame: 17 } ],
+        frameRate:1, 
+    });
+    
     anims.create({
         key: "back",
         frames: anims.generateFrameNames("player", { start: 0, end: 2 }),
@@ -137,6 +242,11 @@ create() {
     anims.create({
         key: "keyd1",
         frames: [ { key: 'player', frame: 42 } ],
+        frameRate:1, 
+    });
+    anims.create({
+        key: "morto",
+        frames: [ { key: 'player', frame: 46 } ],
         frameRate:1, 
     });
     anims.create({
@@ -190,10 +300,31 @@ create() {
     
 
     //the CAMERA
-    const camera = this.cameras.main;
-    camera.startFollow(this.player);
+    const camera = this.cameras.main.setBounds();
+    this.physics.world.setBounds();
+    camera.startFollow(this.player,true);
     camera.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
-
+    this.textTela = this.add.text(60, 20,'Vidas: '+ this.life, {
+        fontFamily: 'Verdana',
+        fontSize: '22px',
+        fill: 'Pink'
+    }).setScrollFactor(0);
+    this.textTela1 = this.add.text(60,40,'Inimigos: 33', {
+        fontFamily: 'Verdana',
+        fontSize: '22px',
+        fill: 'Pink'
+    }).setScrollFactor(0);
+    this.textTela2 = this.add.text(60, 60,'Vida Boss: '+ this.enemyfinalLife, {
+        fontFamily: 'Verdana',
+        fontSize: '22px',
+        fill: 'Pink'
+    }).setScrollFactor(0);
+    
+    if (this.cameras.main.deadzone){
+        graphics = this.add.graphics().setScrollFactor(0);
+        graphics.lineStyle(2, 0x00ff00, 1);
+        graphics.strokeRect(200, 200, this.cameras.main.deadzone.width, this.cameras.main.deadzone.height);      
+    }
     this.cursors = this.input.keyboard.createCursorKeys();
     
 }
@@ -273,22 +404,54 @@ update() {
     }
 }   
 hitEnemy() {
-    this.physics.collide( this.player,
-        this.enemiesGroup,null)
+    const d = Phaser.Math.Distance.Between (
+        this.x,
+        this.y,
+        this.player.x,
+        this.player.y
+    )
+    
     if (this.keyD.isDown) {
         this.player.anims.play("keyd", true);
     } else {
-            if (Math.random(100) < 100) {
+        
+            if (Math.random(100) < 40) {
                 if (!this.invincible) {
                     this.damage.play();
                     this.player.anims.play("damage")
                     this.invincible = true;
                     this.events.emit("hitEnemy", --this.life);
-                    this.titulo.destroy();
-                    this.titulo = this.add.text(250,60, this.life, {
-                    fontSize: "45px",
-                    fill: "#FFD700",
-                    });
+                    this.textTela.setText('Vidas: '+ this.life);
+                    this.time.delayedCall(
+                        2000,
+                        () => {
+                          this.invincible = false;
+                         
+                        },
+                        null,
+                        this
+                      );
+            }
+            
+           
+          
+        
+    }
+            
+        }
+            
+}
+  hitEnemyfinal() {
+    if (this.keyD.isDown) {
+        this.player.anims.play("keyd", true);
+    } else {
+            if (Math.random(100) < 40 && (this.state != this.defesa)) {
+                if (!this.invincible) {
+                    this.damage.play();
+                    this.player.anims.play("damage")
+                    this.invincible = true;
+                    this.events.emit("hitEnemyfinal", --this.life);
+                    this.textTela.setText('Vidas: '+ this.life);
                     this.time.delayedCall(
                         2000,
                         () => {
@@ -304,9 +467,232 @@ hitEnemy() {
           }
         
     }
-    
-    if(this.life <= 0){
-        this.scene.stop("PlayGame")
+}
+
+move(){
+    const d = Phaser.Math.Distance.Between (
+        this.enemyfinal.x,
+        this.enemyfinal.y,
+        this.player.x,
+        this.player.y);
+        
+    if (d < 100 && this.enemyfinal.x<this.player.x ) {
+        const randNumber = Math.floor(Math.random() * 3 + 1)
+        switch(randNumber){
+            case 1:
+            this.enemyfinal.anims.play("efinalgolpe1",true)
+            this.time.addEvent({
+            delay:1300,
+            callback: () => {
+                this.enemyfinal.anims.stop()
+                this.enemyfinal.setVelocity(0)
+            },
+            callbackScope: this,
+        })
+               
+                
+                break
+            case 2: 
+            this.enemyfinal.anims.play("efinalgolpe2",true)
+            this.time.addEvent({
+            delay:1300,
+            callback: () => {
+                this.enemyfinal.anims.stop()
+                this.enemyfinal.setVelocity(0)
+            },
+            callbackScope: this,
+        })
+              
+                break
+           
+            case 3: 
+             this.state = this.defesa
+            this.enemyfinal.anims.play("efinaldefesa",true)
+           
+            this.time.addEvent({
+                delay:1300,
+                callback: () => {
+                    this.enemyfinal.anims.stop()
+                    this.enemyfinal.setVelocity(0)
+                    this.state = this.walking
+                },
+                callbackScope: this,
+            })
+               
+                break
+            default: 
+                this.setVelocityX(0)
+                this.enemyfinal.anims.stop()
+        }
+        
+    }else if(d < 100 && this.enemyfinal.x > this.player.x ){
+        const randNumber = Math.floor(Math.random() * 3 + 1)
+        switch(randNumber){
+            case 1:
+            this.enemyfinal.anims.play("efinalgolpe",true)
+            this.time.addEvent({
+            delay:1300,
+            callback: () => {
+                this.enemyfinal.anims.stop()
+                this.enemyfinal.setVelocity(0)
+            },
+            callbackScope: this,
+        })
+               
+                
+                break
+            case 2: 
+            this.enemyfinal.anims.play("efinalgolpe3",true)
+        this.time.addEvent({
+            delay:1300,
+            callback: () => {
+                this.enemyfinal.anims.stop()
+                this.enemyfinal.setVelocity(0)
+            },
+            callbackScope: this,
+        })
+              
+                break
+           
+            case 3: 
+            this.state = this.defesa
+            this.enemyfinal.anims.play("efinaldefesa1",true)
+            
+            this.time.addEvent({
+                delay:1300,
+                callback: () => {
+                    this.enemyfinal.anims.stop()
+                    this.enemyfinal.setVelocity(0)
+                    this.state = this.walking
+                },
+                callbackScope: this,
+            })
+               
+                break
+            default: 
+                this.setVelocityX(0)
+                this.enemyfinal.anims.stop()
+        }
+    } 
+    else {
+        if (this.state == this.walking) {
+            if (d < 500) {
+                const randNumberr = Math.floor(Math.random() * 4 + 1)
+                switch(randNumberr){
+            case 1:
+               
+                
+                break
+            case 2: 
+              
+                break
+            case 3: 
+            this.enemyfinal.setVelocityX(30)
+            this.enemyfinal.anims.play("efinalb",true)
+                
+               
+                break
+            case 4: 
+            this.enemyfinal.setVelocityX(-30)
+            this.enemyfinal.anims.play("efinals",true)
+                break
+            default: 
+                this.setVelocityX(30)
+                this.enemyfinal.anims.stop()
+            }
+                if (this.enemyfinal.x < this.player.x  ) {
+                    this.enemyfinal.setVelocityX(30)
+                    this.enemyfinal.anims.play("efinald",true)            
+                } else if(this.enemyfinal.x > this.player.x) {
+                    this.enemyfinal.setVelocityX(-30)
+                    this.enemyfinal.anims.play("efinale",true)
+                } else{
+                    this.enemyfinal.anims.stop();
+                }
+                
+            } else {
+                this.enemyfinal.anims.stop();
+            }
+            
+        }    
     }
-  }
+    
+   
+    
+    /*const randNumber = Math.floor(Math.random() * 4 + 1)
+    switch(randNumber){
+        case 1:
+            
+            break
+        case 2: 
+        
+            break
+        case 3: 
+            this.enemyfinal.setVelocityY(30)
+            this.enemyfinal.anims.play("efinald",true)
+            
+           
+            break
+        case 4: 
+            this.enemyfinal.setVelocityY(-30)
+            this.enemyfinal.anims.play("efinale",true)
+           
+            break
+        default: 
+            this.enemyfinal.setVelocityX(30)
+            this.enemyfinal.anims.stop()
+    }*/
+    if (Math.random(100) < 40) {
+        if (d < 30 && (this.state != this.defesa) && this.keyD.isUp &&(this.keyA.isDown ||this.keyS.isDown)) {
+            this.attack.play();
+            this.enemyfinalLife = this.enemyfinalLife - 1;
+            this.textTela2.setText('Vida Boss: '+ this.enemyfinalLife);
+        } 
+    }
+    
+    if (this.enemyfinalLife <= 0) {
+        this.enemyfinal.anims.play("morte");
+        this.enemyfinal.setVisible(false);
+        this.enemyfinal.setActive(false);
+        this.physics.pause();
+        this.time.addEvent({
+            delay:2000,
+        callback: () => {
+            this.scene.start("vitoria")
+        },
+        callbackScope: this,
+    })
+      
+        this.life = 15
+        this.enemyfinalLife = 1
+        
+    }
+    if(this.life <= 0){
+       
+      
+        this.player.anims.stop("morto");
+        this.player.anims.play("morto");
+        this.physics.pause();
+       this.time.addEvent({
+        delay:2000,
+        callback: () => {
+            this.player.anims.play("morto");
+
+            this.scene.start("derrota")
+        },
+        callbackScope: this,
+    })
+        this.enemyfinalLife = 15
+        this.life = 1
+        
+        
+        
+    
+
+    }
+    
+
+    
+}
+
 }

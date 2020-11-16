@@ -6,21 +6,28 @@ class Enemy extends Phaser.Physics.Arcade.Sprite{
 
         //pegar nosso monstrinho chamado slime para aplicar no game
         super(scene,x,y,'enemy', 0)
+        this.vivo = 1
         this.sprite = sprite
         this.scene = scene
+        this.textTela
         this.walking = 0;
         this.attack = attack;
         this.titulo;
         this.invencible = false;
         this.state = this.walking;
-        this.setScale(1.2)
+        this.setScale(1)
         this.enemyLife = 3;
         this.player = player;
+        this.inimigos = 32
+        this.cursors;
         // habilitando as fisicas do mundo
         this.scene.physics.world.enable(this)
+    
+
 
         //adiciona nosso player na cena
         this.scene.add.existing(this)
+    
 
         //setting time to enemy moves
         this.timeEvent = this.scene.time.addEvent({
@@ -30,26 +37,31 @@ class Enemy extends Phaser.Physics.Arcade.Sprite{
             callbackScope: this
         })
         
+        
     }
     create(){
-        this.scene.physics.add.collider(
-            this.player,
-            this.sprite,
-            //funcao para matar o inimigo
-            this.hitEnemy,
-            null
-          );
+        
+        this.textTela = this.scene.add.text(60, 60,'inimigos: 32', {
+            fontFamily: 'Verdana',
+            fontSize: '22px',
+            fill: 'Pink'
+        }).setScrollFactor(0);
+
+    
     }
     
     move(){
-        
-        if (Phaser.Math.Distance.Between (
+        const d = Phaser.Math.Distance.Between (
             this.x,
             this.y,
             this.player.x,
-            this.player.y) < 100 && this.x<this.player.x ) {
+            this.player.y,
+            
+        )
+        if (d < 100 && this.x<this.player.x ) {
             this.anims.play("golpe",true)
-            this.hitEnemy;
+            this.state = this.attack
+            
             this.scene.time.addEvent({
                 delay:1300,
                 callback: () => {
@@ -58,12 +70,9 @@ class Enemy extends Phaser.Physics.Arcade.Sprite{
                 },
                 callbackScope: this,
             })
-        }else if(Phaser.Math.Distance.Between (
-            this.x,
-            this.y,
-            this.player.x,
-            this.player.y) < 100 && this.x > this.player.x ){
+        }else if(d < 100 && this.x > this.player.x ){
                 this.anims.play("golpe1",true)
+                this.state = this.attack
                 this.scene.time.addEvent({
                     delay:1300,
                     callback: () => {
@@ -74,26 +83,17 @@ class Enemy extends Phaser.Physics.Arcade.Sprite{
                 })
         } 
         else {
+            this.state = this.walking
             if (this.state == this.walking) {
-                if (this.x < this.player.x) {
-                    this.setVelocityX(30)
-                    this.anims.play("a",true)            
-                } else if(this.x > this.player.x) {
-                    this.setVelocityX(-30)
-                    this.anims.play("b",true)
-                }    
-            }    
-        }
-        
-       
-        
-        const randNumber = Math.floor(Math.random() * 4 + 1)
-        switch(randNumber){
+                if (d < 500) {
+                    const randNumber = Math.floor(Math.random() * 4 + 1)
+                    switch(randNumber){
             case 1:
+               
                 
                 break
             case 2: 
-            
+              
                 break
             case 3: 
                 this.setVelocityY(30)
@@ -110,24 +110,44 @@ class Enemy extends Phaser.Physics.Arcade.Sprite{
                 this.setVelocityX(30)
                 this.anims.stop()
         }
-        let d = Phaser.Math.Distance.Between(
-            this.x,
-            this.y,
-            this.player.x,
-            this.player.y
-          );
-        if (d < 50) {
+                    if (this.x < this.player.x  ) {
+                        this.setVelocityX(30)
+                        this.anims.play("a",true)            
+                    } else if(this.x > this.player.x) {
+                        this.setVelocityX(-30)
+                        this.anims.play("b",true)
+                    }   
+                    
+                } else {
+                    this.setVelocityX(0)
+                    this.anims.stop();
+                }
+                
+            }    
+        }
+        
+       
+        
+        
+        if (d < 50 && this.scene.keyD.isUp) {
             this.attack.play();
             this.enemyLife = this.enemyLife - 1;
+
         } 
         if (this.enemyLife <= 0) {
             this.setVisible(false);
             this.setActive(false);
+           
             this.body.checkCollision.none = true;
-          }
+        
 
+        }
+        
     }
+    
+        
 }
+
     
       
         
