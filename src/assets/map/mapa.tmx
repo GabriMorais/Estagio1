@@ -16024,10 +16024,10 @@
   </object>
  </objectgroup>
  <objectgroup id="8" name="enemy">
-  <object id="329" name="enemy" type="enemy" x="521" y="433">
+  <object id="329" name="enemy" type="enemy" x="521" y="425">
    <point/>
   </object>
-  <object id="330" name="enemy" type="enemy" x="438" y="327">
+  <object id="330" name="enemy" type="enemy" x="380" y="327">
    <point/>
   </object>
   <object id="331" name="enemy" type="enemy" x="614" y="308">
@@ -16039,10 +16039,10 @@
   <object id="333" name="enemy" type="enemy" x="877" y="291">
    <point/>
   </object>
-  <object id="334" name="enemy" type="enemy" x="841" y="443">
+  <object id="334" name="enemy" type="enemy" x="841" y="428">
    <point/>
   </object>
-  <object id="335" name="enemy" type="enemy" x="1054" y="443">
+  <object id="335" name="enemy" type="enemy" x="1054" y="423">
    <point/>
   </object>
   <object id="336" name="enemy" type="enemy" x="1235" y="278">
@@ -16051,34 +16051,31 @@
   <object id="337" name="enemy" type="enemy" x="1450" y="263">
    <point/>
   </object>
-  <object id="338" name="enemy" type="enemy" x="1567" y="471">
+  <object id="338" name="enemy" type="enemy" x="1567" y="448">
    <point/>
   </object>
   <object id="339" name="enemy" type="enemy" x="1803" y="282">
    <point/>
   </object>
-  <object id="340" name="enemy" type="enemy" x="1879" y="483">
+  <object id="340" name="enemy" type="enemy" x="1879" y="455">
    <point/>
   </object>
   <object id="341" name="enemy" type="enemy" x="2045" y="254">
    <point/>
   </object>
-  <object id="342" name="enemy" type="enemy" x="2150" y="461">
+  <object id="342" name="enemy" type="enemy" x="2150" y="447">
    <point/>
   </object>
   <object id="343" name="enemy" type="enemy" x="2375" y="246">
    <point/>
   </object>
-  <object id="344" name="enemy" type="enemy" x="2445" y="462">
+  <object id="344" name="enemy" type="enemy" x="2445" y="442">
    <point/>
   </object>
   <object id="345" name="enemy" type="enemy" x="2615" y="275">
    <point/>
   </object>
-  <object id="346" name="enemy" type="enemy" x="2754" y="471">
-   <point/>
-  </object>
-  <object id="347" name="enemy" type="enemy" x="2737" y="284">
+  <object id="346" name="enemy" type="enemy" x="2754" y="455">
    <point/>
   </object>
   <object id="348" name="enemy" type="enemy" x="2876" y="265">
@@ -16087,22 +16084,16 @@
   <object id="349" name="enemy" type="enemy" x="2897" y="391">
    <point/>
   </object>
-  <object id="350" name="enemy" type="enemy" x="2962" y="463">
-   <point/>
-  </object>
   <object id="351" name="enemy" type="enemy" x="3087" y="273">
    <point/>
   </object>
-  <object id="352" name="enemy" type="enemy" x="3169" y="401">
-   <point/>
-  </object>
-  <object id="353" name="enemy" type="enemy" x="3111" y="467">
+  <object id="353" name="enemy" type="enemy" x="3111" y="452">
    <point/>
   </object>
   <object id="354" name="enemy" type="enemy" x="3311" y="283">
    <point/>
   </object>
-  <object id="355" name="enemy" type="enemy" x="3304" y="457">
+  <object id="355" name="enemy" type="enemy" x="3304" y="446">
    <point/>
   </object>
   <object id="356" name="enemy" type="enemy" x="3500" y="335">
@@ -16115,9 +16106,6 @@
    <point/>
   </object>
   <object id="359" name="enemy" type="enemy" x="3795" y="441">
-   <point/>
-  </object>
-  <object id="360" name="enemy" type="enemy" x="3792" y="312">
    <point/>
   </object>
  </objectgroup>

@@ -1,33 +1,40 @@
-import FileLoader from "file-loader";
-import { NONE } from "phaser";
+
 import Enemies from "../classes/Enemies";
 export default class PlayGame extends Phaser.Scene {
     constructor() {
         super("PlayGame");
-        this.enemyfinalLife = 1;
-        this.enemies;
         this.player;
-        this.life = 15
-        this.cursors;
+        this.life = 1
         this.golpeesq;
-        this.x = 0;
         this.keyA;
-        this.keyS;
+        this.keyS; 
+        this.x = 0;
+        this.depgolpeesq = 1;
+        this.invincible = false
+        
+        this.enemies;
+        this.enemiesGroup;
+
+        this.cursors;
         this.textTela;
         this.textTela1;
         this.textTela2
-        this.depgolpeesq = 1;
+        this.titulo;
+
+        this.enemyfinal;
+        this.enemyfinalLife = 1;
         this.walking = 1
         this.defesa = 2
+        this.ataque = 3
         this.state = this.walking;
-        this.enemiesGroup;
-        this.invincible = false
-        this.titulo;
+        
+        
         this.music;
         this.damage;
         this.attack;
-        this.enemyfinal;
+      
         this.timeEvent;
+  
         
         
       }
@@ -98,7 +105,7 @@ create() {
   );      
     this.physics.add.collider(this.enemiesGroup, colisao);
     this.physics.add.collider(this.enemiesGroup, depoiscol);
-    this.enemyfinal = this.physics.add.sprite(spawnPoint.x + 200, spawnPoint.y  , "enemyfinal");
+    this.enemyfinal = this.physics.add.sprite(enemyspawnPoint.x , enemyspawnPoint.y  , "enemyfinal");
     this.player.setScale(0.8)
     this.physics.add.collider(this.enemyfinal, colisao);
     this.physics.add.collider(this.enemyfinal, depoiscol);
@@ -329,8 +336,7 @@ create() {
     
 }
 update() {
-    //put here  before your velocity is 0
-    const prevVelocity = this.player.body.velocity.clone();
+    
     //stop player when stop press the key
     this.player.body.setVelocity(0);
     
@@ -338,42 +344,57 @@ update() {
     this.keyS = this.input.keyboard.addKey(83);
     this.keyD = this.input.keyboard.addKey(68);
     //keyboard press to move
-    if (this.cursors.left.isDown) {
+   
+    if (this.cursors.left.isDown ) {
+        
         this.player.body.setVelocityX(-100);
+      
     } else if (this.cursors.right.isDown) {
+        
         this.player.body.setVelocityX(100);
-    } else if (this.cursors.up.isDown) {
+     
+    } else if (this.cursors.up.isDown ) {
+       
         this.player.body.setVelocityY(-80);
-    } else if (this.cursors.down.isDown) {
-        this.player.body.setVelocityY(80);
-    }
     
+    } else if (this.cursors.down.isDown) {
+        
+        this.player.body.setVelocityY(80);
+    
+    }
+   
         //set animations per key pressed
-    if (this.cursors.left.isDown) {
+    if ( this.cursors.left.isDown  ) {
+       
         this.x = 1;
         this.player.anims.play("left", true);
+ 
+       
     } else if (this.cursors.right.isDown) {
-        this.x = 0;
+      
+             this.x = 0;
         this.player.anims.play("right", true);
-    } else if (this.cursors.up.isDown) {
+      
+       
+    } else if ( this.cursors.up.isDown ) {
         //its because when you go, you need see the back of your character
         this.player.anims.play("back", true);
-    } else if (this.cursors.down.isDown) {
+    } else if (this.cursors.down.isDown ) {
         this.player.anims.play("front", true);
     }else if (this.keyA.isDown && this.depgolpeesq == 1 && this.x ==1 ) {
         
         this.player.anims.play("keyq1", true); 
-    }else if (this.keyA.isDown && this.depgolpeesq == 1 && this.x==0) {
+    }else if (this.keyA.isDown && this.depgolpeesq == 1 && this.x==0 ) {
         
         this.player.anims.play("keyq", true); 
         
             
          
        
-    }else if (this.keyS.isDown && this.depgolpeesq == 1 && this.x ==1 ) {
+    }else if (this.keyS.isDown && this.depgolpeesq == 1 && this.x ==1  ) {
         
         this.player.anims.play("keys1", true); 
-    }else if (this.keyS.isDown && this.depgolpeesq == 1 && this.x==0) {
+    }else if (this.keyS.isDown && this.depgolpeesq == 1 && this.x==0 ) {
          
         this.player.anims.play("keyS", true); 
         
@@ -381,14 +402,14 @@ update() {
              
           
         
-    }else if (this.keyD.isDown && this.depgolpeesq == 1 && this.x ==1 ) {
+    }else if (this.keyD.isDown && this.depgolpeesq == 1 && this.x ==1   ) {
         
         this.player.anims.play("keyd1", true); 
-    }else if (this.keyD.isDown && this.depgolpeesq == 1 && this.x==0) {
+    }else if (this.keyD.isDown && this.depgolpeesq == 1 && this.x==0 ) {
          
         this.player.anims.play("keyd", true);
     }
-    else if (this.cursors.space.isDown) {
+    else if (this.cursors.space.isDown && this.life >=0) {
         this.player.setVelocityY(-30);
             
          
@@ -404,18 +425,14 @@ update() {
     }
 }   
 hitEnemy() {
-    const d = Phaser.Math.Distance.Between (
-        this.x,
-        this.y,
-        this.player.x,
-        this.player.y
-    )
     
+     
     if (this.keyD.isDown) {
         this.player.anims.play("keyd", true);
     } else {
-        
-            if (Math.random(100) < 40) {
+        const r = Math.random()*100 
+            
+            if (r <1) {
                 if (!this.invincible) {
                     this.damage.play();
                     this.player.anims.play("damage")
@@ -423,10 +440,10 @@ hitEnemy() {
                     this.events.emit("hitEnemy", --this.life);
                     this.textTela.setText('Vidas: '+ this.life);
                     this.time.delayedCall(
-                        2000,
+                        8000,
                         () => {
                           this.invincible = false;
-                         
+                          
                         },
                         null,
                         this
@@ -441,34 +458,6 @@ hitEnemy() {
         }
             
 }
-  hitEnemyfinal() {
-    if (this.keyD.isDown) {
-        this.player.anims.play("keyd", true);
-    } else {
-            if (Math.random(100) < 40 && (this.state != this.defesa)) {
-                if (!this.invincible) {
-                    this.damage.play();
-                    this.player.anims.play("damage")
-                    this.invincible = true;
-                    this.events.emit("hitEnemyfinal", --this.life);
-                    this.textTela.setText('Vidas: '+ this.life);
-                    this.time.delayedCall(
-                        2000,
-                        () => {
-                          this.invincible = false;
-                         
-                        },
-                        null,
-                        this
-                      );
-            }
-            
-           
-          }
-        
-    }
-}
-
 move(){
     const d = Phaser.Math.Distance.Between (
         this.enemyfinal.x,
@@ -478,27 +467,32 @@ move(){
         
     if (d < 100 && this.enemyfinal.x<this.player.x ) {
         const randNumber = Math.floor(Math.random() * 3 + 1)
+        
         switch(randNumber){
             case 1:
+            this.state = this.ataque
             this.enemyfinal.anims.play("efinalgolpe1",true)
             this.time.addEvent({
             delay:1300,
             callback: () => {
                 this.enemyfinal.anims.stop()
                 this.enemyfinal.setVelocity(0)
+               
             },
             callbackScope: this,
         })
                
                 
-                break
+            break
             case 2: 
+            this.state = this.ataque
             this.enemyfinal.anims.play("efinalgolpe2",true)
             this.time.addEvent({
             delay:1300,
             callback: () => {
                 this.enemyfinal.anims.stop()
                 this.enemyfinal.setVelocity(0)
+                
             },
             callbackScope: this,
         })
@@ -506,7 +500,7 @@ move(){
                 break
            
             case 3: 
-             this.state = this.defesa
+            this.state = this.defesa
             this.enemyfinal.anims.play("efinaldefesa",true)
            
             this.time.addEvent({
@@ -523,18 +517,21 @@ move(){
             default: 
                 this.setVelocityX(0)
                 this.enemyfinal.anims.stop()
+                this.state = this.ataque
         }
         
     }else if(d < 100 && this.enemyfinal.x > this.player.x ){
         const randNumber = Math.floor(Math.random() * 3 + 1)
         switch(randNumber){
             case 1:
+            this.state = this.ataque
             this.enemyfinal.anims.play("efinalgolpe",true)
             this.time.addEvent({
             delay:1300,
             callback: () => {
                 this.enemyfinal.anims.stop()
                 this.enemyfinal.setVelocity(0)
+                this.state = this.walking
             },
             callbackScope: this,
         })
@@ -542,12 +539,14 @@ move(){
                 
                 break
             case 2: 
+            this.state = this.ataque
             this.enemyfinal.anims.play("efinalgolpe3",true)
         this.time.addEvent({
             delay:1300,
             callback: () => {
                 this.enemyfinal.anims.stop()
                 this.enemyfinal.setVelocity(0)
+                this.state = this.walking
             },
             callbackScope: this,
         })
@@ -668,12 +667,13 @@ move(){
         
     }
     if(this.life <= 0){
+       this.player.body.setVelocity(0);
        
-      
-        this.player.anims.stop("morto");
+        
+        
         this.player.anims.play("morto");
         this.physics.pause();
-       this.time.addEvent({
+        this.time.addEvent({
         delay:2000,
         callback: () => {
             this.player.anims.play("morto");
@@ -684,15 +684,41 @@ move(){
     })
         this.enemyfinalLife = 15
         this.life = 1
-        
-        
-        
-    
-
     }
     
 
     
 }
+  hitEnemyfinal() {
+    if (this.keyD.isDown) {
+        this.player.anims.play("keyd", true);
+    } else {
+            
+        if ((this.state ==this.ataque)) {
+               
+                if (!this.invincible) {
+                    this.damage.play();
+                    this.player.anims.play("damage")
+                    this.invincible = true;
+                    this.events.emit("hitEnemyfinal", --this.life);
+                    this.textTela.setText('Vidas: '+ this.life);
+                    this.time.delayedCall(
+                        2000,
+                        () => {
+                          this.invincible = false;
+                         
+                        },
+                        null,
+                        this
+                      );
+            }
+            
+           
+          }
+        
+    }
+}
+
+
 
 }

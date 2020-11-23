@@ -41,12 +41,7 @@ class Enemy extends Phaser.Physics.Arcade.Sprite{
     }
     create(){
         
-        this.textTela = this.scene.add.text(60, 60,'inimigos: 32', {
-            fontFamily: 'Verdana',
-            fontSize: '22px',
-            fill: 'Pink'
-        }).setScrollFactor(0);
-
+       
     
     }
     
@@ -129,7 +124,7 @@ class Enemy extends Phaser.Physics.Arcade.Sprite{
        
         
         
-        if (d < 50 && this.scene.keyD.isUp) {
+        if (d < 50 && this.scene.keyD.isUp && (this.scene.keyS.isDown||this.scene.keyA.isDown)) {
             this.attack.play();
             this.enemyLife = this.enemyLife - 1;
 

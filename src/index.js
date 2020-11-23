@@ -1,5 +1,7 @@
 import Phaser from "phaser";
 import BootScene from "./assets/js/scenes/BootScene";
+import Menu from "./assets/js/scenes/Menu";
+import controles from "./assets/js/scenes/controles";
 import PlayGame from "./assets/js/scenes/PlayGame";
 import vitoria from "./assets/js/scenes/vitoria";
 import derrota from "./assets/js/scenes/derrota";
@@ -19,6 +21,8 @@ const config = {
     },
     scene: [
       BootScene,
+      Menu,
+      controles,
       PlayGame,
       vitoria,
       derrota
