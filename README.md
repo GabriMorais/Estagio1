@@ -20,6 +20,9 @@ Inimigos - Mestre Kitsune e seus seguidores
 
                                                                          Controles
 Movimentação nas setas do teclado
+
 “A” para dar um soco
+
 “D” para movimento de  defesa
+
 “S“ para dar um chute
