@@ -27,6 +27,7 @@ export default class BootScene extends Phaser.Scene {
     this.load.image("teste", "src/assets/img/imginic.png");
     this.load.image("teclas", "src/assets/img/teclass.png");
     this.load.image("morto", "src/assets/img/morto.png");
+    this.load.image("life", "src/assets/img/life1.png");
 
   }
 

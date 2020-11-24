@@ -16,9 +16,7 @@ const config = {
       // Center vertically and horizontally
       autoCenter: Phaser.Scale.CENTER_BOTH,
     },
-    dom: {
-      createContainer: true,
-    },
+    
     scene: [
       BootScene,
       Menu,

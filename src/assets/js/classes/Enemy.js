@@ -6,20 +6,19 @@ class Enemy extends Phaser.Physics.Arcade.Sprite{
 
         //pegar nosso monstrinho chamado slime para aplicar no game
         super(scene,x,y,'enemy', 0)
-        this.vivo = 1
+        this.attack = attack
         this.sprite = sprite
         this.scene = scene
         this.textTela
+        this.ataque = 1
         this.walking = 0;
-        this.attack = attack;
         this.titulo;
         this.invencible = false;
         this.state = this.walking;
         this.setScale(1)
-        this.enemyLife = 3;
+        this.enemyLife = 2;
         this.player = player;
-        this.inimigos = 32
-        this.cursors;
+    
         // habilitando as fisicas do mundo
         this.scene.physics.world.enable(this)
     
@@ -53,9 +52,9 @@ class Enemy extends Phaser.Physics.Arcade.Sprite{
             this.player.y,
             
         )
-        if (d < 100 && this.x<this.player.x ) {
+        if (d < 80 && this.x<this.player.x ) {
             this.anims.play("golpe",true)
-            this.state = this.attack
+            this.state = this.ataque
             
             this.scene.time.addEvent({
                 delay:1300,
@@ -65,9 +64,9 @@ class Enemy extends Phaser.Physics.Arcade.Sprite{
                 },
                 callbackScope: this,
             })
-        }else if(d < 100 && this.x > this.player.x ){
+        }else if(d < 80 && this.x > this.player.x ){
                 this.anims.play("golpe1",true)
-                this.state = this.attack
+                this.state = this.ataque
                 this.scene.time.addEvent({
                     delay:1300,
                     callback: () => {
@@ -80,7 +79,7 @@ class Enemy extends Phaser.Physics.Arcade.Sprite{
         else {
             this.state = this.walking
             if (this.state == this.walking) {
-                if (d < 500) {
+                if (d < 400) {
                     const randNumber = Math.floor(Math.random() * 4 + 1)
                     switch(randNumber){
             case 1:
@@ -124,7 +123,7 @@ class Enemy extends Phaser.Physics.Arcade.Sprite{
        
         
         
-        if (d < 50 && this.scene.keyD.isUp && (this.scene.keyS.isDown||this.scene.keyA.isDown)) {
+        if (d < 100 && this.scene.keyD.isUp && (this.scene.keyS.isDown||this.scene.keyA.isDown)) {
             this.attack.play();
             this.enemyLife = this.enemyLife - 1;
 
