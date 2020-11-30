@@ -45,7 +45,7 @@ export default class Menu extends Phaser.Scene {
           
           this.music = this.sound.add('musica',{
           
-            volume : .05,
+            volume : .09,
             loop : true,
         });
       

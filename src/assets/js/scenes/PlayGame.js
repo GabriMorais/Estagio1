@@ -9,7 +9,7 @@ export default class PlayGame extends Phaser.Scene {
         this.keyA;
         this.keyS;
         this.x = 0;
-        this.depgolpeesq = 25;
+        this.depgolpeesq = 1;
         this.invincible = false
         this.vida;
         this.vida1;
@@ -27,7 +27,7 @@ export default class PlayGame extends Phaser.Scene {
         this.titulo;
 
         this.enemyfinal;
-        this.enemyfinalLife = 1;
+        this.enemyfinalLife = 20;
         this.walking = 1
         this.defesa = 2
         this.ataque = 3
@@ -273,13 +273,13 @@ export default class PlayGame extends Phaser.Scene {
             repeat: -1,
         });
         anims.create({
-            key: "keyq",
+            key: "keyA",
             frames: anims.generateFrameNames("player", { start: 9, end: 10 }),
             frameRate: 17,
             repeat: -1,
         });
         anims.create({
-            key: "keyq1",
+            key: "keyA1",
             frames: anims.generateFrameNames("player", { start: 28, end: 27 }),
             frameRate: 17,
             repeat: -1,
@@ -433,10 +433,10 @@ export default class PlayGame extends Phaser.Scene {
             this.player.anims.play("front", true);
         } else if (this.keyA.isDown && this.depgolpeesq == 1 && this.x == 1) {
 
-            this.player.anims.play("keyq1", true);
+            this.player.anims.play("keyA1", true);
         } else if (this.keyA.isDown && this.depgolpeesq == 1 && this.x == 0) {
 
-            this.player.anims.play("keyq", true);
+            this.player.anims.play("keyA", true);
 
 
 
@@ -681,13 +681,12 @@ export default class PlayGame extends Phaser.Scene {
             this.time.addEvent({
                 delay: 2000,
                 callback: () => {
-                    this.enemyfinal.anims.play("morte");
                     this.scene.start("vitoria")
                 },
                 callbackScope: this,
             })
 
-            this.life = 20
+            this.life = 15
             this.enemyfinalLife = 20
 
         }
@@ -707,7 +706,7 @@ export default class PlayGame extends Phaser.Scene {
                 },
                 callbackScope: this,
             })
-            this.enemyfinalLife = 20
+            this.enemyfinalLife = 15
             this.life = 20
         }
 
