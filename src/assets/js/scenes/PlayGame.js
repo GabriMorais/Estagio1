@@ -4,12 +4,12 @@ export default class PlayGame extends Phaser.Scene {
     constructor() {
         super("PlayGame");
         this.player;
-        this.life = 25
+        this.life = 15
         this.golpeesq;
         this.keyA;
         this.keyS;
         this.x = 0;
-        this.depgolpeesq = 1;
+        this.depgolpeesq = 25;
         this.invincible = false
         this.vida;
         this.vida1;
@@ -27,7 +27,7 @@ export default class PlayGame extends Phaser.Scene {
         this.titulo;
 
         this.enemyfinal;
-        this.enemyfinalLife = 20;
+        this.enemyfinalLife = 1;
         this.walking = 1
         this.defesa = 2
         this.ataque = 3
@@ -53,6 +53,7 @@ export default class PlayGame extends Phaser.Scene {
             loop: true,
             callbackScope: this
         })
+        //sons
         this.music = this.sound.add('musica', {
 
             volume: .1,
@@ -69,34 +70,34 @@ export default class PlayGame extends Phaser.Scene {
             loop: false,
             volume: 5,
         });
+        //mapa
         const map = this.make.tilemap({ key: "map" });
         const tileset = map.addTilesetImage("16", "tiles")
 
         const mapa = map.createStaticLayer("mapa", tileset, 0, 0);
         const colisao = map.createStaticLayer("colisao", tileset, 0, 0);
         const depoiscol = map.createStaticLayer("depoiscol", tileset, 0, 0,);
+        const outro = map.createStaticLayer("outra", tileset, 0, 0,);
+
         colisao.setCollisionByProperty({ coliders: true });
         depoiscol.setCollisionByProperty({ coliders: true });
-        this.invincible = false
+        outro.setCollisionByProperty({ col: true });
+       
+        
         //player
-
+        this.invincible = false
         const spawnPoint = map.findObject(
             //player and not Player like your variable
             "player",
             (objects) => objects.name === "player"
         );
-        const enemyspawnPoint = map.findObject(
-            //player and not Player like your variable
-            "enemyfinal",
-            (objects) => objects.name === "enemyfinal"
-        );
-
         this.player = this.physics.add.sprite(spawnPoint.x, spawnPoint.y, "player");
         this.player.setScale(1.2)
         this.player.setDepth(1)
         this.physics.add.collider(this.player, colisao);
         this.physics.add.collider(this.player, depoiscol);
-
+        
+        //enemies basicos
         //first enemy name of the object
         //secound enemy the name now to object
         this.enemies = map.createFromObjects("enemy", "enemy", {});
@@ -111,10 +112,20 @@ export default class PlayGame extends Phaser.Scene {
         );
         this.physics.add.collider(this.enemiesGroup, colisao);
         this.physics.add.collider(this.enemiesGroup, depoiscol);
+        this.physics.add.collider(this.enemiesGroup, outro);
+        
+        //enemy final
+        const enemyspawnPoint = map.findObject(
+            //player and not Player like your variable
+            "enemyfinal",
+            (objects) => objects.name === "enemyfinal"
+        );
+
         this.enemyfinal = this.physics.add.sprite(enemyspawnPoint.x, enemyspawnPoint.y, "enemyfinal");
 
         this.physics.add.collider(this.enemyfinal, colisao);
         this.physics.add.collider(this.enemyfinal, depoiscol);
+        this.physics.add.collider(this.enemyfinal, outro);
         this.physics.add.overlap(
             this.player,
             this.enemyfinal,
@@ -123,6 +134,7 @@ export default class PlayGame extends Phaser.Scene {
             null,
             this
         );
+        //pontos de vida
         this.vida = this.physics.add.image(2055, 250, "life")
         this.vida.setScale(0.08);
         this.physics.add.collider(
@@ -159,6 +171,8 @@ export default class PlayGame extends Phaser.Scene {
             null,
             this
         );
+
+        //anims
         const anims = this.anims;
         anims.create({
             key: "right",
@@ -347,7 +361,7 @@ export default class PlayGame extends Phaser.Scene {
 
 
 
-        //the CAMERA
+        //CAMERA
         const camera = this.cameras.main.setBounds();
         this.physics.world.setBounds();
         camera.startFollow(this.player, true);
@@ -375,7 +389,7 @@ export default class PlayGame extends Phaser.Scene {
 
         //stop player when stop press the key
         this.player.body.setVelocity(0);
-
+        //add teclas
         this.keyA = this.input.keyboard.addKey(65);
         this.keyS = this.input.keyboard.addKey(83);
         this.keyD = this.input.keyboard.addKey(68);
@@ -510,6 +524,7 @@ export default class PlayGame extends Phaser.Scene {
                         callback: () => {
                             this.enemyfinal.anims.stop()
                             this.enemyfinal.setVelocity(0)
+                            this.state = this.walking
 
                         },
                         callbackScope: this,
@@ -525,6 +540,7 @@ export default class PlayGame extends Phaser.Scene {
                         callback: () => {
                             this.enemyfinal.anims.stop()
                             this.enemyfinal.setVelocity(0)
+                            this.state = this.walking
 
                         },
                         callbackScope: this,
@@ -550,7 +566,7 @@ export default class PlayGame extends Phaser.Scene {
                 default:
                     this.setVelocityX(0)
                     this.enemyfinal.anims.stop()
-                    this.state = this.ataque
+                    this.state = this.walking
             }
 
         } else if (d < 100 && this.enemyfinal.x > this.player.x) {
@@ -602,6 +618,7 @@ export default class PlayGame extends Phaser.Scene {
 
                     break
                 default:
+                    this.state = this.walking
                     this.setVelocityX(0)
                     this.enemyfinal.anims.stop()
             }

@@ -28,11 +28,13 @@ export default class BootScene extends Phaser.Scene {
     this.load.image("teclas", "src/assets/img/teclass.png");
     this.load.image("morto", "src/assets/img/morto.png");
     this.load.image("life", "src/assets/img/life1.png");
+    this.load.image("imgvit", "src/assets/img/imgvit.png");
+    this.load.image("a", "src/assets/img/background.gif");
 
   }
 
   loadTiledMap() {
-    this.load.tilemapTiledJSON("map", "src/assets/map/mapa6.json");
+    this.load.tilemapTiledJSON("map", "src/assets/map/mapa8.json");
   }
 
   loadSpriteSheets() {
